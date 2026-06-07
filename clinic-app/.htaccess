@@ -1,0 +1,36 @@
+# Clinic Portal app main .htaccess
+# Protects core PHP helper files and sensitive data from direct web access
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Block direct access to /data folder
+RewriteRule ^data/ - [F,L]
+
+# Block direct access to PHP helper files that are NOT page/AJAX entry points
+# (db.php = DB connection helper, config.php = holds the DeepSeek API key/constants,
+# test.php = debug/diagnostic page that leaks PHP version & paths - never expose these)
+RewriteRule ^(db|config|test)\.php$ - [F,L]
+
+# Block backup/editor temp files (a common way source code leaks out)
+RewriteRule \.(bak|old|orig|save|swp|swo|tmp)$ - [F,L]
+
+# Block hidden version-control / env files
+RewriteRule (^|/)\.(git|env|svn) - [F,L]
+</IfModule>
+
+# Disable directory listings
+Options -Indexes
+
+# Hide server info
+ServerSignature Off
+
+# Never show PHP errors/paths to visitors (this is what test.php was doing - info leak)
+php_flag display_errors off
+php_flag display_startup_errors off
+php_flag log_errors on
+
+# Block access to this .htaccess file itself
+<Files ".htaccess">
+Require all denied
+</Files>

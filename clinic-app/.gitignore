@@ -1,0 +1,12 @@
+# Never commit the live config — it contains the real DeepSeek API key.
+config.php
+
+# Local data / runtime files (SQLite DB, uploads, generated docs)
+data/
+uploads/
+static/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
